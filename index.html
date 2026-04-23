@@ -124,13 +124,11 @@ td, th {
 let data = [];
 let chartInstance = null;
 
-// вкладки
 function openTab(id) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
 
-// загрузка файла
 document.getElementById('fileInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -156,7 +154,6 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     }
 });
 
-//чтение exel
 function parseXLSX(rows) {
     data = [];
 
@@ -181,7 +178,6 @@ function parseXLSX(rows) {
 
         const className = String(row[classIndex] || "").trim();
 
-        // перебираем все предметы (все колонки после "Класс")
         for (let j = classIndex + 1; j < headers.length; j++) {
             const subject = String(headers[j] || "").trim();
             const grade = Number(row[j]);
@@ -302,7 +298,6 @@ function deleteStudent(name, className) {
     renderTable();
 }
 
-// добавить запись
 function addRecord() {
     const name = document.getElementById("name").value;
     const className = document.getElementById("class").value;
@@ -313,7 +308,6 @@ function addRecord() {
     renderTable();
 }
 
-// сохранить файл
 function saveFile() {
     let allSubjects = [];
 
@@ -339,13 +333,10 @@ function saveFile() {
         grouped[key].subjects[d.subject] = d.grade;
     });
 
-    // формируем массив для Excel
     let sheetData = [];
 
-    // заголовок
     sheetData.push(["ФИО", "Класс", ...allSubjects]);
 
-    // строки
     Object.values(grouped).forEach(student => {
         let row = [student.name, student.class];
 
@@ -356,7 +347,6 @@ function saveFile() {
         sheetData.push(row);
     });
 
-    // создаём файл
     const ws = XLSX.utils.aoa_to_sheet(sheetData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Журнал");
@@ -404,7 +394,6 @@ function getStats(grades) {
     };
 }
 
-// статистика
 function calcStats() {
     const classSubjectStats = {};
     const subjectOverallStats = {};
@@ -511,12 +500,10 @@ function calcStats() {
     drawChartsByClass(classSubjectStats, subjectOverallStats);
 }
 
-// график
 function drawChartsByClass(classSubjectStats, subjectOverallStats) {
     const container = document.getElementById("chartsContainer");
     container.innerHTML = "";
 
-    // общий график по всем классам
     const overallBlock = document.createElement("div");
     overallBlock.innerHTML = `
         <h3>Все классы</h3>
@@ -551,7 +538,6 @@ function drawChartsByClass(classSubjectStats, subjectOverallStats) {
         }
     });
 
-    // график для каждого класса
     Object.keys(classSubjectStats).sort().forEach((className, index) => {
         const chartId = `chart_class_${index}`;
 
