@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -145,38 +146,15 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
             parseXLSX(rows);
         };
         reader.readAsArrayBuffer(file);
-    } } else {
-    reader.onload = function(e) {
-        const buffer = e.target.result;
-        const text = decodeCSV(buffer);
-        parseCSV(text);
-    };
-
-    reader.readAsArrayBuffer(file);
-}
-});
-function decodeCSV(buffer) {
-    const encodings = ["utf-8", "windows-1251", "ibm866"];
-
-    for (const encoding of encodings) {
-        try {
-            const text = new TextDecoder(encoding).decode(buffer);
-
-            if (
-                text.includes("ФИО") ||
-                text.includes("Фамилия") ||
-                text.includes("Имя") ||
-                text.includes("Класс") ||
-                text.includes("Предмет") ||
-                text.includes("Оценка")
-            ) {
-                return text;
-            }
-        } catch (e) {}
+    } else {
+        reader.onload = function(e) {
+            const text = e.target.result;
+            parseCSV(text);
+        };
+        reader.readAsText(file, 'UTF-8');
     }
+});
 
-    return new TextDecoder("windows-1251").decode(buffer);
-}
 function parseXLSX(rows) {
     data = [];
 
